@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Otaku Era Quest</title>
+<style>
+  body {
+    margin:0; padding:0;
+    background: radial-gradient(circle, #0a0a0a, #1a0a1a);
+    color:white; font-family:sans-serif; text-align:center;
+    transition: background 1s ease;
+  }
+  #container {
+    padding:50px;
+  }
+  button {
+    padding:15px 30px; margin:20px; cursor:pointer;
+    background: purple; color:white; border:none; border-radius:10px;
+    font-size:16px; box-shadow: 0 0 10px #ff00ff;
+    transition: all 0.3s ease;
+  }
+  button:hover { 
+    background: #ff00ff; 
+    box-shadow: 0 0 20px #ff66ff; 
+  }
+</style>
+</head>
+<body>
+<div id="container">
+<h1>Welcome to Otaku Era Quest!</h1>
+<div id="question">Question 1: Who is the main character of Naruto?</div>
+<button onclick="next()">Next</button>
+</div>
+
+<script>
+let step = 0;
+const questions = [
+  "Question 1: Who is the main character of Naruto?",
+  "Question 2: Who created Dragon Ball?",
+  "Question 3: In which year was One Piece first released?",
+  "Question 4: Who is the author of Attack on Titan?",
+  "Question 5: What does 'Otaku' mean?"
+];
+
+const backgrounds = [
+  "radial-gradient(circle, #0a0a0a, #1a0a1a)",
+  "radial-gradient(circle, #1a001a, #2a0033)",
+  "radial-gradient(circle, #0a0a1a, #330033)",
+  "radial-gradient(circle, #1a001a, #660066)",
+  "radial-gradient(circle, #000000, #990099)"
+];
+
+function next() {
+  step++;
+  if(step < questions.length){
+    document.getElementById('question').innerText = questions[step];
+    document.body.style.background = backgrounds[step];
+  } else {
+    document.getElementById('question').innerText = "🎉 Congratulations! You completed the adventure.";
+    let btn = document.querySelector('button');
+    btn.innerText = "Visit Shop";
+    btn.onclick = () => window.location.href="https://ko-fi.com/otakuera/shop";
+  }
+}
+</script>
+</body>
+</html>
