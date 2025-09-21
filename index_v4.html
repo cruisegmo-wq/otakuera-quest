@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Otaku Era – Complete Horror Anime Adventure</title>
+<style>
+  :root{
+    --brand-pink:#ff4dd8;
+    --brand-purple:#b983ff;
+    --txt:#fff;
+    --glass: rgba(10,10,20,.60);
+    --accent:#ffd8ff;
+    --dark-bg:#0a0016;
+    --success:#00ff88;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:#000;font-family:system-ui,Segoe UI,Roboto,Arial;overflow-x:hidden}
+  
+  /* ====== Animated Horror Background ====== */
+  .bg {
+    position:fixed; inset:0; overflow:hidden; z-index:-3;
+    background: 
+      radial-gradient(120% 100% at 50% 10%, var(--dark-bg) 0%, #020005 40%, #000 70%),
+      conic-gradient(from 180deg at 50% 50%, #0b0010 0%, #000 25%, #16001a 50%, #000 75%, #0b0010 100%);
+    filter: contrast(1.05) brightness(.95);
+  }
+  
+  .fog, .fog2{
+    position:absolute; inset:-20%; 
+    background:
+      radial-gradient(60% 40% at 30% 20%, rgba(255,77,216,.12), transparent 60%),
+      radial-gradient(50% 35% at 70% 60%, rgba(185,131,255,.12), transparent 60%);
+    animation: drift 22s linear infinite;
+    mix-blend-mode: screen; opacity:.40; z-index:-2;
+  }
+  .fog2{ 
+    animation: drift2 34s linear infinite; 
+    opacity:.30; 
+    filter: blur(6px); 
+  }
+  
+  @keyframes drift{
+    0%{transform: translate3d(0,0,0) scale(1)}
+    50%{transform: translate3d(4%, -2%, 0) scale(1.05)}
+    100%{transform: translate3d(0,0,0) scale(1)}
+  }
+  @keyframes drift2{
+    0%{transform: translate3d(0,0,0) scale(1.05) rotate(0deg)}
+    50%{transform: translate3d(-3%, 3%, 0) scale(1.08) rotate(2deg)}
+    100%{transform: translate3d(0,0,0) scale(1.05) rotate(0deg)}
+  }
+  
+  .scan {
+    position:absolute; inset:0; 
+    background: linear-gradient(to bottom, rgba(255,255,255,.03) 0 2px, transparent 2px 100%);
+    background-size:100% 6px; 
+    opacity:.25; 
+    animation: scan 6s linear infinite;
+    z-index:-1;
+  }
+  @keyframes scan {
+    0%{transform:translateY(-6px)}
+    100%{transform:translateY(6px)}
+  }
+
+  /* ====== Layout ====== */
+  main{min-height:100vh; display:grid; place-items:center; padding:24px}
+  .panel{
+    width:min(1000px, 95vw);
+    background: linear-gradient(to bottom right, rgba(255,77,216,.09), rgba(185,131,255,.07));
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:20px; 
+    padding:32px 28px 26px;
+    box-shadow: 0 0 40px rgba(255,77,216,.12), inset 0 0 60px rgba(185,131,255,.08);
+    backdrop-filter: blur(10px) saturate(120%);
+  }
+  
+  .brand{
+    display:flex; align-items:center; gap:12px; margin-bottom:16px;
+    color:var(--accent); 
+    text-shadow:0 0 10px rgba(255,216,255,.35);
+    letter-spacing:.5px; font-weight:700; font-size:16px;
+  }
+  .brand .dot{
+    width:12px; height:12px; border-radius:50%;
+    background:radial-gradient(circle,var(--brand-pink) 0,var(--brand-purple) 60%, transparent 70%);
+    box-shadow:0 0 14px var(--brand-pink);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+  
+  h1{
+    margin:6px 0 12px; color:var(--txt);
+    text-shadow: 0 0 18px rgba(255,77,216,.5), 0 2px 14px rgba(0,0,0,.8);
+    font-size: clamp(28px, 4.5vw, 44px); 
+    line-height:1.1;
+    text-align:center;
+  }
+  
+  .stage-indicator {
+    text-align:center; margin:16px 0;
+    color:var(--brand-purple);
+    font-size:18px; font-weight:600;
+    text-shadow: 0 0 12px rgba(185,131,255,.5);
+  }
+  
+  p.lead{
+    color:#f6f2ff; opacity:.92; margin:0 0 16px;
+    text-shadow:0 0 10px rgba(185,131,255,.35), 1px 2px 2px rgba(0,0,0,.85);
+    font-size: clamp(16px, 2.4vw, 19px);
+    text-align:center;
+  }
+  
+  .progress-bar {
+    width:100%; height:8px; 
+    background:rgba(255,255,255,.1);
+    border-radius:4px; margin:20px 0;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%; 
+    background:linear-gradient(90deg, var(--brand-pink), var(--brand-purple));
+    border-radius:4px;
+    transition: width 0.8s ease;
+    box-shadow: 0 0 10px var(--brand-pink);
+  }
+  
+  .qa{
+    margin:16px 0 20px; padding:16px; border-radius:16px;
+    background: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.3));
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow: inset 0 0 24px rgba(185,131,255,.12);
+  }
+  
+  .q{
+    color:#fff; margin:0 0 12px; font-weight:700; letter-spacing:.3px;
+    text-shadow: 0 0 12px rgba(255,77,216,.45), 1px 1px 2px rgba(0,0,0,.8);
+    font-size: clamp(16px, 2.2vw, 18px);
+  }
+  
+  .answers{
+    display:grid; gap:12px; 
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr))
+  }
+  
+  .opt{
+    cursor:pointer; padding:12px 16px; border-radius:14px;
+    border:1px solid rgba(255,255,255,.12);
+    color:#fff; background: rgba(20,10,30,.55);
+    text-shadow:0 0 8px rgba(185,131,255,.35);
+    transition:.3s all;
+    user-select:none;
+    position:relative;
+    overflow:hidden;
+  }
+  .opt:hover{
+    transform:translateY(-3px); 
+    border-color:rgba(255,77,216,.4);
+    box-shadow: 0 6px 25px rgba(255,77,216,.3), inset 0 0 20px rgba(185,131,255,.15);
+    background: rgba(30,15,40,.75);
+  }
+  .opt.selected{
+    background: linear-gradient(135deg, rgba(255,77,216,.25), rgba(185,131,255,.20));
+    border-color:var(--brand-pink); 
+    transform:translateY(-2px);
+    box-shadow: 0 0 30px rgba(255,77,216,.4), inset 0 0 30px rgba(185,131,255,.2);
+  }
+  .opt:before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,77,216,0.2), transparent);
+    transition: left 0.5s;
+  }
+  .opt:hover:before {
+    left: 100%;
+  }
+  
+  .result{
+    margin:24px 0; padding:24px; border-radius:18px;
+    background: linear-gradient(135deg, rgba(255,77,216,.15), rgba(185,131,255,.12));
+    border:1px solid rgba(255,77,216,.25);
+    box-shadow: 0 0 35px rgba(255,77,216,.25), inset 0 0 40px rgba(185,131,255,.15);
+    text-align:center; display:none;
+  }
+  .result h2{
+    color:var(--accent); margin:0 0 16px;
+    text-shadow: 0 0 15px rgba(255,216,255,.5);
+    font-size: clamp(22px, 3.5vw, 32px);
+  }
+  .result p{
+    color:#f6f2ff; margin:10px 0;
+    text-shadow: 0 0 8px rgba(185,131,255,.4);
+    line-height:1.5;
+  }
+  
+  .btn{
+    display:inline-block; margin:18px 10px 0; padding:14px 28px;
+    background: linear-gradient(135deg, var(--brand-pink), var(--brand-purple));
+    color:#fff; text-decoration:none; border-radius:14px; font-weight:600;
+    border:none; cursor:pointer; transition:.3s all;
+    text-shadow: 0 0 10px rgba(0,0,0,.5);
+    box-shadow: 0 4px 20px rgba(255,77,216,.3);
+    position:relative;
+    overflow:hidden;
+  }
+  .btn:hover{
+    transform:translateY(-3px); 
+    box-shadow: 0 8px 30px rgba(255,77,216,.5);
+  }
+  .btn:before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  .btn:hover:before {
+    left: 100%;
+  }
+  
+  .shop-btn {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    animation: shopGlow 2s ease-in-out infinite alternate;
+  }
+  .shop-btn:hover {
+    background: linear-gradient(135deg, #00ff88, #00aa55);
+  }
+  @keyframes shopGlow {
+    0% { box-shadow: 0 4px 20px rgba(0,255,136,.3); }
+    100% { box-shadow: 0 4px 30px rgba(0,255,136,.6); }
+  }
+  
+  .final-stage {
+    background: linear-gradient(135deg, rgba(0,255,136,.1), rgba(255,77,216,.1));
+    border-color: var(--success);
+  }
+  
+  .hidden { display: none !important; }
+  
+  @media (max-width: 768px) {
+    .answers { grid-template-columns: 1fr; }
+    .btn { margin: 12px 5px 0; padding: 12px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="fog"></div>
+  <div class="fog2"></div>
+  <div class="scan"></div>
+</div>
+
+<main>
+  <div class="panel">
+    <div class="brand">
+      <div class="dot"></div>
+      OTAKU ERA
+    </div>
+    
+    <h1>🎭 Horror Anime Adventure Quest</h1>
+    <div class="stage-indicator" id="stage-indicator">Stage 1: The Secret Gate</div>
+    <p class="lead">Embark on a spine-chilling journey through the darkest corners of anime horror!</p>
+    
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    
+    <!-- Stage 1: The Secret Gate -->
+    <div id="stage-1" class="stage">
+      <div class="qa">
+        <div class="q">What type of horror atmosphere captivates you most?</div>
+        <div class="answers">
+          <div class="opt" data-value="psychological" onclick="selectAnswer(this, 1, 1)">🧠 Psychological Mind Games</div>
+          <div class="opt" data-value="supernatural" onclick="selectAnswer(this, 1, 2)">👻 Supernatural & Spirits</div>
+          <div class="opt" data-value="gore" onclick="selectAnswer(this, 1, 3)">🩸 Gore & Body Horror</div>
+        </div>
+      </div>
+      
+      <div class="qa">
+        <div class="q">Which setting would terrify you most?</div>
+        <div class="answers">
+          <div class="opt" data-value="school" onclick="selectAnswer(this, 1, 4)">🏫 Cursed School</div>
+          <div class="opt" data-value="hospital" onclick="selectAnswer(this, 1, 5)">🏥 Abandoned Hospital</div>
+          <div class="opt" data-value="village" onclick="selectAnswer(this, 1, 6)">🏘️ Isolated Village</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stage 2: The Hidden Map -->
+    <div id="stage-2" class="stage hidden">
+      <div class="qa">
+        <div class="q">What scares you most about characters in horror anime?</div>
+        <div class="answers">
+          <div class="opt" data-value="madness" onclick="selectAnswer(this, 2, 1)">😵‍💫 Descent into Madness</div>
+          <div class="opt" data-value="possession" onclick="selectAnswer(this, 2, 2)">👹 Demonic Possession</div>
+          <div class="opt" data-value="transformation" onclick="selectAnswer(this, 2, 3)">🧟 Body Transformation</div>
+        </div>
+      </div>
+      
+      <div class="qa">
+        <div class="q">Which type of antagonist is most frightening?</div>
+        <div class="answers">
+          <div class="opt" data-value="human" onclick="selectAnswer(this, 2, 4)">😈 Twisted Human</div>
+          <div class="opt" data-value="monster" onclick="selectAnswer(this, 2, 5)">👾 Eldritch Monster</div>
+          <div class="opt" data-value="spirit" onclick="selectAnswer(this, 2, 6)">👻 Vengeful Spirit</div>
+        </div>
+      </div>
+      
+      <div class="qa">
+        <div class="q">What kind of horror pacing do you prefer?</div>
+        <div class="answers">
+          <div class="opt" data-value="slow" onclick="selectAnswer(this, 2, 7)">🐌 Slow-burn Tension</div>
+          <div class="opt" data-value="fast" onclick="selectAnswer(this, 2, 8)">⚡ Fast-paced Scares</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stage 3: The Final Riddle -->
+    <div id="stage-3" class="stage hidden">
+      <div class="qa">
+        <div class="q">What visual style appeals to you most in horror anime?</div>
+        <div class="answers">
+          <div class="opt" data-value="dark" onclick="selectAnswer(this, 3, 1)">🌑 Dark & Gritty</div>
+          <div class="opt" data-value="colorful" onclick="selectAnswer(this, 3, 2)">🎨 Deceptively Colorful</div>
+        </div>
+      </div>
+      
+      <div class="qa">
+        <div class="q">Which ending type do you find most haunting?</div>
+        <div class="answers">
+          <div class="opt" data-value="ambiguous" onclick="selectAnswer(this, 3, 3)">❓ Ambiguous & Open</div>
+          <div class="opt" data-value="tragic" onclick="selectAnswer(this, 3, 4)">💔 Tragic & Definitive</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Stage 4: The Reward -->
+    <div id="stage-4" class="stage hidden final-stage">
+      <div class="result" style="display: block;">
+        <h2 id="anime-title">🎭 Your Perfect Horror Anime</h2>
+        <p id="anime-description">Based on your choices, we've found your ideal spine-chilling anime experience!</p>
+        <p><strong id="why-match">Your preferences align perfectly with this terrifying masterpiece!</strong></p>
+        
+        <button class="btn" onclick="restartQuest()">🔄 Take Quest Again</button>
+        <button class="btn" onclick="window.open('https://myanimelist.net', '_blank', 'noopener,noreferrer')">📺 Find on MyAnimeList</button>
+        <button class="btn shop-btn" onclick="visitShop()">🛒 Visit Otaku Era Shop</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// Game State
+let currentStage = 1;
+let answers = {};
+let questionCount = 0;
+const totalQuestions = 10;
+
+// Audio Context for Sound Effects
+let audioContext;
+let isAudioInitialized = false;
+
+function initAudio() {
+  if (!isAudioInitialized) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    isAudioInitialized = true;
+  }
+}
+
+// Sound Effects
+function playSound(frequency, duration, type = 'sine') {
+  if (!isAudioInitialized) return;
+  
+  const oscillator = audioContext.createOscillator();
+  const gainNode = audioContext.createGain();
+  
+  oscillator.connect(gainNode);
+  gainNode.connect(audioContext.destination);
+  
+  oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+  oscillator.type = type;
+  
+  gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+  
+  oscillator.start(audioContext.currentTime);
+  oscillator.stop(audioContext.currentTime + duration);
+}
+
+function playSelectSound() {
+  playSound(800, 0.2);
+  setTimeout(() => playSound(1000, 0.1), 100);
+}
+
+function playStageSound() {
+  playSound(600, 0.3);
+  setTimeout(() => playSound(800, 0.2), 150);
+  setTimeout(() => playSound(1200, 0.2), 300);
+}
+
+function playShopSound() {
+  playSound(1000, 0.2);
+  setTimeout(() => playSound(1200, 0.2), 100);
+  setTimeout(() => playSound(1500, 0.3), 200);
+}
+
+// Anime Database
+const animeDatabase = {
+  'psychological-school-madness-human-slow-dark-ambiguous': {
+    title: '🎭 Perfect Blue',
+    description: 'A psychological masterpiece about an idol whose reality blurs with her performances in terrifying ways.',
+    match: 'Your love for psychological horror and ambiguous endings makes this a perfect match!'
+  },
+  'supernatural-hospital-possession-spirit-fast-colorful-tragic': {
+    title: '👻 Another',
+    description: 'A cursed classroom where students face mysterious deaths linked to supernatural forces.',
+    match: 'Supernatural hospital horror with tragic endings - exactly your style!'
+  },
+  'gore-village-transformation-monster-slow-dark-tragic': {
+    title: '🩸 Elfen Lied',
+    description: 'Mutant beings with deadly powers escape in this brutal series mixing gore with deep emotion.',
+    match: 'Gore, transformation, and tragic storytelling - perfectly terrifying for you!'
+  },
+  'psychological-village-madness-human-slow-colorful-ambiguous': {
+    title: '🔍 Higurashi: When They Cry',
+    description: 'A peaceful village hides dark secrets as friends turn against each other in repeating cycles.',
+    match: 'Village psychological horror with ambiguous mysteries - your ideal nightmare!'
+  },
+  'supernatural-school-possession-spirit-fast-dark-tragic': {
+    title: '🏥 Corpse Party',
+    description: 'Students trapped in a haunted school face vengeful spirits and gruesome deaths.',
+    match: 'School supernatural horror with tragic fates - your perfect horror combination!'
+  },
+  'gore-hospital-transformation-monster-fast-dark-tragic': {
+    title: '🧟 Shiki',
+    description: 'A rural village becomes overrun by vampire-like creatures in this slow-burn horror.',
+    match: 'Hospital setting with transformation horror - exactly what terrifies you most!'
+  },
+  'psychological-school-madness-human-fast-colorful-ambiguous': {
+    title: '🌃 Paranoia Agent',
+    description: 'Urban psychological horror exploring mass hysteria and societal breakdown.',
+    match: 'Fast-paced psychological horror with colorful deception - your perfect blend!'
+  },
+  'supernatural-village-possession-spirit-slow-dark-ambiguous': {
+    title: '🕵️ Monster',
+    description: 'A doctor pursues a former patient turned serial killer in this psychological thriller.',
+    match: 'Supernatural village horror with ambiguous mysteries - your ideal terror!'
+  }
+};
+
+function selectAnswer(element, stage, questionNum) {
+  initAudio();
+  playSelectSound();
+  
+  // Remove previous selections in this question
+  const questionContainer = element.closest('.qa');
+  const siblings = questionContainer.querySelectorAll('.opt');
+  siblings.forEach(sibling => sibling.classList.remove('selected'));
+  
+  // Select current option
+  element.classList.add('selected');
+  
+  // Store answer
+  const key = `${stage}-${questionNum}`;
+  answers[key] = element.dataset.value;
+  
+  questionCount++;
+  updateProgress();
+  
+  // Check if stage is complete
+  setTimeout(() => {
+    if (isStageComplete(stage)) {
+      advanceStage();
+    }
+  }, 800);
+}
+
+function isStageComplete(stage) {
+  switch(stage) {
+    case 1: return answers['1-1'] && answers['1-2'];
+    case 2: return answers['2-1'] && answers['2-2'] && answers['2-3'];
+    case 3: return answers['3-1'] && answers['3-2'];
+    default: return false;
+  }
+}
+
+function updateProgress() {
+  const progress = (questionCount / totalQuestions) * 100;
+  document.getElementById('progress-fill').style.width = progress + '%';
+}
+
+function advanceStage() {
+  playStageSound();
+  
+  // Hide current stage
+  document.getElementById(`stage-${currentStage}`).classList.add('hidden');
+  
+  currentStage++;
+  
+  if (currentStage <= 3) {
+    // Show next stage
+    document.getElementById(`stage-${currentStage}`).classList.remove('hidden');
+    updateStageIndicator();
+  } else {
+    // Show final result
+    showFinalResult();
+  }
+}
+
+function updateStageIndicator() {
+  const stages = {
+    1: 'Stage 1: The Secret Gate',
+    2: 'Stage 2: The Hidden Map', 
+    3: 'Stage 3: The Final Riddle',
+    4: 'Stage 4: The Reward'
+  };
+  
+  document.getElementById('stage-indicator').textContent = stages[currentStage];
+}
+
+function showFinalResult() {
+  currentStage = 4;
+  updateStageIndicator();
+  
+  // Generate result key
+  const key = `${answers['1-1']}-${answers['1-2']}-${answers['2-1']}-${answers['2-2']}-${answers['2-3']}-${answers['3-1']}-${answers['3-2']}`;
+  
+  // Get anime recommendation
+  const anime = animeDatabase[key] || {
+    title: '🎭 Custom Horror Experience',
+    description: 'Based on your unique preferences, you have a taste for complex horror narratives that blend multiple elements.',
+    match: 'Your sophisticated horror preferences make you perfect for exploring deeper anime mysteries!'
+  };
+  
+  // Update result display
+  document.getElementById('anime-title').textContent = anime.title;
+  document.getElementById('anime-description').textContent = anime.description;
+  document.getElementById('why-match').textContent = anime.match;
+  
+  // Show final stage
+  document.getElementById('stage-4').classList.remove('hidden');
+  
+  // Complete progress
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+function restartQuest() {
+  playSelectSound();
+  
+  // Reset game state
+  currentStage = 1;
+  answers = {};
+  questionCount = 0;
+  
+  // Reset UI
+  document.querySelectorAll('.stage').forEach(stage => stage.classList.add('hidden'));
+  document.getElementById('stage-1').classList.remove('hidden');
+  
+  // Reset selections
+  document.querySelectorAll('.opt').forEach(opt => opt.classList.remove('selected'));
+  
+  // Reset progress
+  document.getElementById('progress-fill').style.width = '0%';
+  updateStageIndicator();
+}
+
+function visitShop() {
+  initAudio();
+  playShopSound();
+  
+  // Visual feedback
+  const btn = event.target;
+  const originalText = btn.textContent;
+  btn.textContent = '🚀 Opening Shop...';
+  btn.style.transform = 'scale(0.95)';
+  
+  setTimeout(() => {
+    // Try multiple methods to ensure the link opens
+    try {
+      const shopWindow = window.open('https://ko-fi.com/otakuera/shop', '_blank');
+      if (!shopWindow) {
+        // Fallback if popup blocked
+        window.location.href = 'https://ko-fi.com/otakuera/shop';
+      }
+    } catch (e) {
+      // Final fallback
+      window.location.href = 'https://ko-fi.com/otakuera/shop';
+    }
+    btn.textContent = originalText;
+    btn.style.transform = '';
+  }, 500);
+}
+
+// Initialize audio on first user interaction
+document.addEventListener('click', initAudio, { once: true });
+document.addEventListener('touchstart', initAudio, { once: true });
+
+// Visual effects on hover
+document.addEventListener('mouseover', function(e) {
+  if (e.target.classList.contains('opt')) {
+    if (Math.random() > 0.7) {
+      createSparkle(e.target);
+    }
+  }
+});
+
+function createSparkle(element) {
+  const sparkle = document.createElement('div');
+  sparkle.style.cssText = `
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--brand-pink);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1000;
+    animation: sparkle 1s ease-out forwards;
+  `;
+  
+  const rect = element.getBoundingClientRect();
+  sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+  sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+  
+  document.body.appendChild(sparkle);
+  
+  setTimeout(() => {
+    if (sparkle.parentNode) {
+      sparkle.parentNode.removeChild(sparkle);
+    }
+  }, 1000);
+}
+
+// Add sparkle animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes sparkle {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(180deg);
+      opacity: 0;
+    }
+  }
+`;
+document.head.appendChild(style);
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9828d5d0d286ee8e',t:'MTc1ODQ1MDA4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
