@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Otaku Era Quest</title>
+<style>
+  body { 
+    margin:0; padding:0; 
+    background: radial-gradient(circle, #0a0a0a, #1a0a1a); 
+    color:white; font-family:sans-serif; text-align:center;
+  }
+  #container { padding:50px; }
+  button { 
+    padding:15px 30px; margin:20px; cursor:pointer; 
+    background: purple; color:white; border:none; border-radius:10px;
+    font-size:16px;
+  }
+  button:hover { background: #ff00ff; }
+</style>
+</head>
+<body>
+<div id="container">
+<h1>Welcome to Otaku Era Quest!</h1>
+<div id="question">Question 1: Who is the main character of Naruto?</div>
+<button onclick="next()">Next</button>
+</div>
+
+<script>
+let step = 1;
+
+function next() {
+  step++;
+  switch(step) {
+    case 2:
+      document.getElementById('question').innerText = "Question 2: Who created Dragon Ball?";
+      break;
+    case 3:
+      document.getElementById('question').innerText = "Question 3: In which year was One Piece first released?";
+      break;
+    case 4:
+      document.getElementById('question').innerText = "Question 4: Who is the author of Attack on Titan?";
+      break;
+    case 5:
+      document.getElementById('question').innerText = "Question 5: What does 'Otaku' mean?";
+      break;
+    case 6:
+      document.getElementById('question').innerText = "Congratulations! You completed the adventure.";
+      let btn = document.querySelector('button');
+      btn.innerText = "Visit Shop";
+      btn.onclick = () => window.location.href="https://ko-fi.com/otakuera/shop";
+      break;
+    default:
+      document.getElementById('question').innerText = "Thank you for playing!";
+      document.querySelector('button').style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
